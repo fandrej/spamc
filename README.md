@@ -11,11 +11,15 @@ python3 -m pip install --upgrade pip
 pip install -r requirements.txt
 ```
 
-### Run
+### Run examles
 ```
 source venv/bin/activate
 python ./main.py 127.0.0.1 2000 -p 1 -s "Test"
 python ./main.py 127.0.0.1 2000 -p 1 -f files/galileo-big.bin
+```   
+or
+```
+./run.sh python ./main.py 127.0.0.1 2000 -p 1 -s "Test"
 ```
 
 ### Receive spam
