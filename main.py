@@ -33,17 +33,27 @@ def spamer(pid: int, ipaddress: str, port: int, interval: int = 1000, sentence: 
 
     while 1:
         try:
-            print("spamer %s: %s:%s, spam %s, interval %s" % (
-            pid, ipaddress, port, sentence if sentence else path, interval))
-
             with socket.socket(socket.AF_INET, socket.SOCK_STREAM) as s:
+                s.setsockopt(socket.SOL_SOCKET, socket.SO_REUSEADDR, 1)
                 s.connect((ipaddress, port))
-                s.sendall(spam_content)
-                #data = s.recv(1024)
+                s.settimeout(0.1)   # recv timeout
+
+                while 1:
+                    print("spamer %s: %s:%s, spam %s, interval %s" % (
+                        pid, ipaddress, port, sentence if sentence else path, interval))
+
+                    # send
+                    s.sendall(spam_content)
+                    # receive
+                    data = s.recv(65535)
+                    # send timeout
+                    gevent.sleep(interval * 0.001)
             # with socket
 
-            gevent.sleep(interval * 0.001)
-        except KeyboardInterrupt:
+            # reconnect timeout
+            gevent.sleep(1)
+
+        except (KeyboardInterrupt, socket.timeout):
             pass
         except Exception as ex:
             print("spamer %s: %s" % (pid, str(ex)))
