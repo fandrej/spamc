@@ -7,6 +7,7 @@ sudo chown -R user:group spamc
 sudo chmod -R g+w spamc
 cd spamc
 python3 -m venv $(pwd)/venv
+source venv/bin/activate
 python3 -m pip install --upgrade pip
 pip install -r requirements.txt
 ```
@@ -27,4 +28,15 @@ or
 sudo apt update
 sudo apt -y install ncat
 ncat -klp 2000 -w 10
+```
+
+### Dumping
+#### Receiver side
+```
+sudo tcpdump -i eth0 port 2000 -w /tmp/in.pcap
+```
+
+#### Sender side
+```
+sudo tcpdump -i eth0 src host 127.0.0.1 -w /tmp/out.pcap
 ```
