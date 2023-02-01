@@ -31,6 +31,9 @@ def spamer(pid: int, ipaddress: str, port: int, interval: int = 1000, sentence: 
     else:
         return
 
+
+    cnt = 0
+
     while 1:
         try:
             with socket.socket(socket.AF_INET, socket.SOCK_STREAM) as s:
@@ -39,9 +42,6 @@ def spamer(pid: int, ipaddress: str, port: int, interval: int = 1000, sentence: 
                 s.settimeout(0.1)   # recv timeout
 
                 while 1:
-                    print("spamer %s: %s:%s, spam %s, interval %s" % (
-                        pid, ipaddress, port, sentence if sentence else path, interval))
-
                     # send
                     s.sendall(spam_content)
 
@@ -50,6 +50,12 @@ def spamer(pid: int, ipaddress: str, port: int, interval: int = 1000, sentence: 
                         data = s.recv(65535)
                     except socket.timeout:
                         pass
+
+                    cnt += 1
+                    if cnt in [0, 100]:
+                        print("spamer %s: %s:%s, spam %s, interval %s" % (pid, ipaddress, port, sentence if sentence else path, interval))
+                        if cnt >= 100:
+                            cnt = 0
 
                     # send timeout
                     gevent.sleep(interval * 0.001)
@@ -76,8 +82,6 @@ if __name__ == '__main__':
                         help="spam phrase quoted if it contains spaces")
     parser.add_argument("-f", "--file", type=str, help="spam file")
     args = parser.parse_args()
-
-    print(args)
 
     if not args.sentence and not args.file:
         print("Specify a sentence or file")
