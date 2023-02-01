@@ -1,5 +1,6 @@
 """
 This is a simple Python socket client for spam.
+Author: Andrey Fedorov, mail@locman.org
 
 https://vovkd.github.io/gevent-tutorial/
 https://realpython.com/python-sockets/
