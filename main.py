@@ -63,7 +63,6 @@ def spamer(pid: int, ipaddress: str, port: int, interval: int = 1000) -> None:
             return
         except Exception as ex:
             print("spamer %s: %s" % (pid, str(ex)))
-            return
 
         # reconnect timeout
         gevent.sleep(1)
