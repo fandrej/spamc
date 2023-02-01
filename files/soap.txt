@@ -1,0 +1,39 @@
+POST / HTTP/1.0
+Host: 176.31.104.16:40105
+User-Agent: SecureBlackbox
+Accept-Encoding: gzip, deflate
+Connection: keep-alive
+Content-Length: 383
+Content-Type: text/xml
+
+<?xml version="1.0" encoding="windows-1251"?>
+<soapenv:Envelope xmlns:env="http://schemas.xmlsoap.org/soap/envelope">
+<soapenv:Header/>
+<soapenv:Body>
+<ws:PutCoord>
+<ObjectID>01326273</ObjectID>
+<Coord time="2020-01-19T14:19:40Z" lon="65.222512" lat="55.403608" alt="10" speed="10.0" dir="20" valid="1" />
+<DigI inpnum="6" />
+</ws:PutCoord>
+<ws:PutCoord>
+<ObjectID>01326274</ObjectID>
+<Coord time="2015-12-25T04:31:40Z" lon="65.222512" lat="55.403608" alt="10" speed="10.0" dir="20" valid="1" />
+<DigI inpnum="6" />
+<DigI inpnum="7" />
+<DigI inpnum="8" />
+</ws:PutCoord>
+<ws:PutCoord>
+<ObjectID>01326275</ObjectID>
+<Coord time="2015-12-25T04:31:40Z" lon="65.222512" lat="55.403608" alt="10" speed="10.0" dir="20" valid="1" />
+<DigI inpnum="6" />
+<DigI inpnum="7" />
+<DigI inpnum="8" />
+<DigI inpnum="6" />
+<DigI inpnum="7" />
+<DigI inpnum="8" />
+<DigI inpnum="6" />
+<DigI inpnum="7" />
+<DigI inpnum="8" />
+</ws:PutCoord>
+</soapenv:Body>
+</soapenv:Envelope>
