@@ -57,11 +57,13 @@ def spamer(pid: int, ipaddress: str, port: int, interval: int = 1000) -> None:
 
                     # send timeout
                     gevent.sleep(interval * 0.001)
+                # while 1
             # with socket
         except KeyboardInterrupt:
             return
         except Exception as ex:
             print("spamer %s: %s" % (pid, str(ex)))
+            return
 
         # reconnect timeout
         gevent.sleep(1)
@@ -69,22 +71,18 @@ def spamer(pid: int, ipaddress: str, port: int, interval: int = 1000) -> None:
 # spamer
 
 
-# Press the green button in the gutter to run the script.
 if __name__ == '__main__':
     parser = argparse.ArgumentParser("spamc")
     parser.add_argument("ip", type=str, help="ip address to spam")
     parser.add_argument("port", type=int, help="port number")
     parser.add_argument("-p", "--processes", type=int, help="number of spam processes", default=10)
-    parser.add_argument("-i", "--interval", type=int, help="spam interval (millises.) per process", default=1000)
+    parser.add_argument("-i", "--interval", type=int, help="spam interval (millisec.) per process", default=1000)
     parser.add_argument("-s", "--sentence", type=str,
                         help="spam phrase quoted if it contains spaces")
     parser.add_argument("-f", "--file", type=str, help="spam file")
     args = parser.parse_args()
 
-    if not args.sentence and not args.file:
-        print("Specify a sentence or file")
-        exit(1)
-    elif args.sentence:
+    if args.sentence:
         sentense_content = str.encode(args.sentence)
     elif args.file:
         try:
@@ -93,10 +91,9 @@ if __name__ == '__main__':
         except Exception as ex:
             print("file %s error: %s" % (args.file, str(ex)))
             exit(1)
-
-    glist = []
-    for i in range(args.processes):
-        glist.append(gevent.spawn(spamer, i, args.ip, args.port, args.interval))
+    else:
+        print("Specify a sentence or file")
+        exit(1)
 
     print("Spam to %s:%s, processes: %s, spam interval: %s, %s: %s" % (args.ip,
                                                                       args.port,
@@ -104,9 +101,15 @@ if __name__ == '__main__':
                                                                       args.interval,
                                                                       "sentence" if args.sentence else "file",
                                                                       args.sentence if args.sentence else args.file))
+    glist = []
     try:
-        gevent.joinall(glist)
+        for i in range(args.processes):
+            glist.append(gevent.spawn(spamer, i, args.ip, args.port, args.interval))
+
+        if len(glist):
+            gevent.joinall(glist)
     except KeyboardInterrupt:
         pass
     except Exception as ex:
         print(str(ex))
+        exit(1)
