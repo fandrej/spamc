@@ -15,6 +15,7 @@ pip install -r requirements.txt
 ```
 source venv/bin/activate
 python ./main.py 127.0.0.1 2000 -p 1 -s "Test"
+python ./main.py 127.0.0.1 2000 -p 1 -f files/galileo-big.bin
 ```
 
 ### Receive spam
