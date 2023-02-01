@@ -44,19 +44,23 @@ def spamer(pid: int, ipaddress: str, port: int, interval: int = 1000, sentence: 
 
                     # send
                     s.sendall(spam_content)
+
                     # receive
-                    data = s.recv(65535)
+                    try:
+                        data = s.recv(65535)
+                    except socket.timeout:
+                        pass
+
                     # send timeout
                     gevent.sleep(interval * 0.001)
             # with socket
-
-            # reconnect timeout
-            gevent.sleep(1)
-
-        except (KeyboardInterrupt, socket.timeout):
-            pass
+        except KeyboardInterrupt:
+            return
         except Exception as ex:
             print("spamer %s: %s" % (pid, str(ex)))
+
+        # reconnect timeout
+        gevent.sleep(1)
     # while 1
 # spamer
 
