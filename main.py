@@ -2,10 +2,15 @@
 This is a simple Python socket client for spam.
 Author: Andrey Fedorov, mail@locman.org
 
+Help:
 https://vovkd.github.io/gevent-tutorial/
 https://realpython.com/python-sockets/
 
-nc.exe -l -p 2000
+Receive spam:
+windows:
+    nc.exe -L -p 2000
+linux:
+    ncat -klp 2000 -w 10
 """
 
 import argparse
