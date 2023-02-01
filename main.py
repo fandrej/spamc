@@ -18,19 +18,17 @@ import gevent
 import socket
 
 
-def spamer(pid: int, ipaddress: str, port: int, interval: int = 1000, sentence: str = None, path: str = None) -> None:
-    if sentence:
-        spam_content = str.encode(sentence)
-    elif path:
-        try:
-            with open(path, "rb") as f:
-                spam_content = f.read()
-        except Exception as ex:
-            print("spamer %s: %s" % (pid, str(ex)))
-            return
+sentense_content = None
+file_content = None
+
+
+def spamer(pid: int, ipaddress: str, port: int, interval: int = 1000) -> None:
+    if sentense_content:
+        spam_content = sentense_content
+    elif file_content:
+        spam_content = file_content
     else:
         return
-
 
     cnt = 0
 
@@ -52,9 +50,9 @@ def spamer(pid: int, ipaddress: str, port: int, interval: int = 1000, sentence: 
                         pass
 
                     cnt += 1
-                    if cnt in [0, 100]:
-                        print("spamer %s: %s:%s, spam %s, interval %s" % (pid, ipaddress, port, sentence if sentence else path, interval))
-                        if cnt >= 100:
+                    if cnt in [0, 10]:
+                        print("spamer %s: %s:%s, interval %s, sended %s times" % (pid, ipaddress, port, interval, cnt))
+                        if cnt >= 10:
                             cnt = 0
 
                     # send timeout
@@ -86,10 +84,19 @@ if __name__ == '__main__':
     if not args.sentence and not args.file:
         print("Specify a sentence or file")
         exit(1)
+    elif args.sentence:
+        sentense_content = str.encode(args.sentence)
+    elif args.file:
+        try:
+            with open(args.file, "rb") as f:
+                file_content = f.read()
+        except Exception as ex:
+            print("file %s error: %s" % (args.file, str(ex)))
+            exit(1)
 
     glist = []
     for i in range(args.processes):
-        glist.append(gevent.spawn(spamer, i, args.ip, args.port, args.interval, args.sentence, args.file))
+        glist.append(gevent.spawn(spamer, i, args.ip, args.port, args.interval))
 
     print("Spam to %s:%s, processes: %s, spam interval: %s, %s: %s" % (args.ip,
                                                                       args.port,
