@@ -1,4 +1,5 @@
 # This is a simple Python socket client for spam.
+## Designed for load testing
 ### Installation
 ```
 cd /opt
