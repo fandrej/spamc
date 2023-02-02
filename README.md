@@ -25,9 +25,9 @@ positional arguments:
 optional arguments:
   -h, --help            show this help message and exit
   -p PROCESSES, --processes PROCESSES
-                        number of spam processes
+                        number of spam processes (default 10)
   -i INTERVAL, --interval INTERVAL
-                        spam interval (millisec.) per process
+                        spam interval (millisec.) per process (default 1000)
   -s SENTENCE, --sentence SENTENCE
                         spam phrase quoted if it contains spaces
   -f FILE, --file FILE  spam file
