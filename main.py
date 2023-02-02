@@ -69,8 +69,8 @@ if __name__ == '__main__':
     parser = argparse.ArgumentParser("python ./main.py")
     parser.add_argument("ip", type=str, help="ip address to spam")
     parser.add_argument("port", type=int, help="port number")
-    parser.add_argument("-p", "--processes", type=int, help="number of spam processes", default=10)
-    parser.add_argument("-i", "--interval", type=int, help="spam interval (millisec.) per process", default=1000)
+    parser.add_argument("-p", "--processes", type=int, help="number of spam processes (default 10)", default=10)
+    parser.add_argument("-i", "--interval", type=int, help="spam interval (millisec.) per process (default 1000)", default=1000)
     parser.add_argument("-s", "--sentence", type=str,
                         help="spam phrase quoted if it contains spaces")
     parser.add_argument("-f", "--file", type=str, help="spam file")
