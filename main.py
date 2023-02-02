@@ -66,7 +66,7 @@ def spamer(pid: int, ipaddress: str, port: int, interval: int = 1000) -> None:
 
 
 if __name__ == '__main__':
-    parser = argparse.ArgumentParser("spamc")
+    parser = argparse.ArgumentParser("python ./main.py")
     parser.add_argument("ip", type=str, help="ip address to spam")
     parser.add_argument("port", type=int, help="port number")
     parser.add_argument("-p", "--processes", type=int, help="number of spam processes", default=10)
