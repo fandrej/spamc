@@ -14,8 +14,10 @@ linux:
 """
 
 import argparse
-import gevent
 import socket
+import time
+import random
+from multiprocessing import Process
 
 
 sentense_content = None
@@ -30,14 +32,13 @@ def spamer(pid: int, ipaddress: str, port: int, interval: int = 1000) -> None:
     else:
         return
 
-    cnt = 0
-
+    time.sleep(random.random())
     while 1:
         try:
             with socket.socket(socket.AF_INET, socket.SOCK_STREAM) as s:
                 s.setsockopt(socket.SOL_SOCKET, socket.SO_REUSEADDR, 1)
                 s.connect((ipaddress, port))
-                s.settimeout(0.1)   # recv timeout
+                s.settimeout(0.5)   # recv timeout
 
                 while 1:
                     # send
@@ -49,14 +50,8 @@ def spamer(pid: int, ipaddress: str, port: int, interval: int = 1000) -> None:
                     except socket.timeout:
                         pass
 
-                    cnt += 1
-                    if cnt in [0, 10]:
-                        print("spamer %s: %s:%s, interval %s, sended %s times" % (pid, ipaddress, port, interval, cnt))
-                        if cnt >= 10:
-                            cnt = 0
-
                     # send timeout
-                    gevent.sleep(interval * 0.001)
+                    time.sleep(interval * 0.001)
                 # while 1
             # with socket
         except KeyboardInterrupt:
@@ -65,7 +60,7 @@ def spamer(pid: int, ipaddress: str, port: int, interval: int = 1000) -> None:
             print("spamer %s: %s" % (pid, str(ex)))
 
         # reconnect timeout
-        gevent.sleep(1)
+        time.sleep(1)
     # while 1
 # spamer
 
@@ -94,19 +89,29 @@ if __name__ == '__main__':
         print("Specify a sentence or file")
         exit(1)
 
+    if(args.processes <= 0):
+        print("Invalid parameter processes")
+        exit(1)
+
+    if(args.interval <= 0):
+        print("Invalid parameter interval")
+        exit(1)
+
     print("Spam to %s:%s, processes: %s, spam interval: %s, %s: %s" % (args.ip,
                                                                       args.port,
                                                                       args.processes,
                                                                       args.interval,
                                                                       "sentence" if args.sentence else "file",
                                                                       args.sentence if args.sentence else args.file))
-    glist = []
+    procs = []
+
     try:
         for i in range(args.processes):
-            glist.append(gevent.spawn(spamer, i, args.ip, args.port, args.interval))
+            p = Process(target=spamer, args=(i, args.ip, args.port, args.interval,), daemon=True)
+            procs.append(p)
+            p.start()
 
-        if len(glist):
-            gevent.joinall(glist)
+        [proc.join() for proc in procs]
     except KeyboardInterrupt:
         pass
     except Exception as ex:
