@@ -32,7 +32,12 @@ def spamer(pid: int, ipaddress: str, port: int, interval: int = 1000) -> None:
     else:
         return
 
-    time.sleep(random.random())
+    try:
+        time.sleep(random.random())
+    except KeyboardInterrupt:
+        print("spamer %s: finished without starting" % pid)
+        return
+
     while 1:
         try:
             with socket.socket(socket.AF_INET, socket.SOCK_STREAM) as s:
